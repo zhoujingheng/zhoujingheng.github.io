@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="Creating a View ClassSubclass a ViewDefine Custom AttributesApply Custom AttributesAdd Properties and EventsDesign For Accessibility">
+<meta name="description" content="三个方法dispatchTouchEventonInterceptTouchEventonTouchEvent">
 <meta property="og:type" content="article">
-<meta property="og:title" content="创建自定义视图类">
-<meta property="og:url" content="http://yoursite.com/2018/08/10/创建自定义视图类/index.html">
+<meta property="og:title" content="View事件分发机制解析">
+<meta property="og:url" content="http://yoursite.com/2018/10/25/View事件分发机制解析/index.html">
 <meta property="og:site_name" content="Flynn&#39;s Notes">
-<meta property="og:description" content="Creating a View ClassSubclass a ViewDefine Custom AttributesApply Custom AttributesAdd Properties and EventsDesign For Accessibility">
-<meta property="og:updated_time" content="2018-08-10T07:54:23.878Z">
+<meta property="og:description" content="三个方法dispatchTouchEventonInterceptTouchEventonTouchEvent">
+<meta property="og:updated_time" content="2018-10-25T07:25:09.528Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="创建自定义视图类">
-<meta name="twitter:description" content="Creating a View ClassSubclass a ViewDefine Custom AttributesApply Custom AttributesAdd Properties and EventsDesign For Accessibility">
+<meta name="twitter:title" content="View事件分发机制解析">
+<meta name="twitter:description" content="三个方法dispatchTouchEventonInterceptTouchEventonTouchEvent">
 
 
 
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/10/创建自定义视图类/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/25/View事件分发机制解析/"/>
 
 
 
 
 
-  <title>创建自定义视图类 | Flynn's Notes</title>
+  <title>View事件分发机制解析 | Flynn's Notes</title>
   
 
 
@@ -231,7 +231,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/10/创建自定义视图类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/25/View事件分发机制解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Flynn">
@@ -248,7 +248,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">创建自定义视图类</h1>
+          <h1 class="post-title" itemprop="name headline">View事件分发机制解析</h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-10T15:51:36+08:00">
-                2018-08-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-25T15:22:24+08:00">
+                2018-10-25
               </time>
             
 
@@ -298,7 +298,8 @@
       
 
       
-        <h1 id="Creating-a-View-Class"><a href="#Creating-a-View-Class" class="headerlink" title="Creating a View Class"></a>Creating a View Class</h1><h1 id="Subclass-a-View"><a href="#Subclass-a-View" class="headerlink" title="Subclass a View"></a>Subclass a View</h1><h1 id="Define-Custom-Attributes"><a href="#Define-Custom-Attributes" class="headerlink" title="Define Custom Attributes"></a>Define Custom Attributes</h1><h1 id="Apply-Custom-Attributes"><a href="#Apply-Custom-Attributes" class="headerlink" title="Apply Custom Attributes"></a>Apply Custom Attributes</h1><h1 id="Add-Properties-and-Events"><a href="#Add-Properties-and-Events" class="headerlink" title="Add Properties and Events"></a>Add Properties and Events</h1><h1 id="Design-For-Accessibility"><a href="#Design-For-Accessibility" class="headerlink" title="Design For Accessibility"></a>Design For Accessibility</h1>
+        <h3 id="三个方法"><a href="#三个方法" class="headerlink" title="三个方法"></a>三个方法</h3><p>dispatchTouchEvent<br>onInterceptTouchEvent<br>onTouchEvent</p>
+
       
     </div>
     
@@ -322,8 +323,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/23/自定义View概述/" rel="next" title="自定义View概述">
-                <i class="fa fa-chevron-left"></i> 自定义View概述
+              <a href="/2018/08/10/优化视图/" rel="next" title="优化视图">
+                <i class="fa fa-chevron-left"></i> 优化视图
               </a>
             
           </div>
@@ -331,10 +332,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/10/实现自定义绘图/" rel="prev" title="实现自定义绘图">
-                实现自定义绘图 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -453,7 +450,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Creating-a-View-Class"><span class="nav-number">1.</span> <span class="nav-text">Creating a View Class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Subclass-a-View"><span class="nav-number">2.</span> <span class="nav-text">Subclass a View</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Define-Custom-Attributes"><span class="nav-number">3.</span> <span class="nav-text">Define Custom Attributes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apply-Custom-Attributes"><span class="nav-number">4.</span> <span class="nav-text">Apply Custom Attributes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Add-Properties-and-Events"><span class="nav-number">5.</span> <span class="nav-text">Add Properties and Events</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Design-For-Accessibility"><span class="nav-number">6.</span> <span class="nav-text">Design For Accessibility</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#三个方法"><span class="nav-number">1.</span> <span class="nav-text">三个方法</span></a></li></ol></div>
             
 
           </div>
