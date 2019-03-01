@@ -376,12 +376,21 @@ private void recyclerAndFillView(RecyclerView.Recycler recycler, RecyclerView.St
             scale = (float) (rect.left + getWidth() * 0.35 - getWidth() * 0.5 - scrollOffset);
             scale /= translate();
             scale = Math.abs(scale);
-</code></pre><p>//                v.setAlpha(1 - scale <em> 0.5f);<br>                scale </em>= 1 / 20f;<br>                scale = 1 - scale;<br>                v.setScaleX(scale);<br>                v.setScaleY(scale);<br>                layoutDecorated(v, rect.left - scrollOffset, rect.top, rect.right - scrollOffset, rect.bottom);<br>            }<br>        }<br>    }</p>
-<pre><code>private float translate() {
+            //v.setAlpha(1 - scale * 0.5f);
+            scale *= 1 / 20f;
+            scale = 1 - scale;
+            v.setScaleX(scale);
+            v.setScaleY(scale);
+            layoutDecorated(v, rect.left - scrollOffset, rect.top, rect.right - scrollOffset, rect.bottom);
+        }
+    }
+}
+
+private float translate() {
     return (float) (getWidth() * 0.7);
 }
-</code></pre><p>}</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自定义LayoutManager的步骤：</p>
+}
+</code></pre><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自定义LayoutManager的步骤：</p>
 <ol>
 <li>自定义itemView的位置</li>
 <li>滑动实现</li>
