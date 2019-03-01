@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Flynn&#39;s Notes">
 <meta property="og:description" content="实现功能 实现方式自定义LayoutManagerpublic class GalleryLayoutManager extends RecyclerView.LayoutManager { private int totalWidth; private int scrollOffset; private SparseArray&amp;lt;Rect&amp;gt; allRect;  public Galle">
 <meta property="og:image" content="https://i.imgur.com/TKFFwvQ.png">
-<meta property="og:updated_time" content="2019-03-01T07:26:58.900Z">
+<meta property="og:updated_time" content="2019-03-01T07:38:26.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RecyclerView实现Gallery画廊效果">
 <meta name="twitter:description" content="实现功能 实现方式自定义LayoutManagerpublic class GalleryLayoutManager extends RecyclerView.LayoutManager { private int totalWidth; private int scrollOffset; private SparseArray&amp;lt;Rect&amp;gt; allRect;  public Galle">
@@ -377,7 +377,7 @@ private void recyclerAndFillView(RecyclerView.Recycler recycler, RecyclerView.St
             scale = (float) (rect.left + getWidth() * 0.35 - getWidth() * 0.5 - scrollOffset);
             scale /= translate();
             scale = Math.abs(scale);
-            //v.setAlpha(1 - scale * 0.5f);
+            v.setAlpha(1 - scale * 0.5f);
             scale *= 1 / 20f;
             scale = 1 - scale;
             v.setScaleX(scale);

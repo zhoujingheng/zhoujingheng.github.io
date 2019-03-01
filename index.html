@@ -376,7 +376,7 @@ private void recyclerAndFillView(RecyclerView.Recycler recycler, RecyclerView.St
             scale = (float) (rect.left + getWidth() * 0.35 - getWidth() * 0.5 - scrollOffset);
             scale /= translate();
             scale = Math.abs(scale);
-            //v.setAlpha(1 - scale * 0.5f);
+            v.setAlpha(1 - scale * 0.5f);
             scale *= 1 / 20f;
             scale = 1 - scale;
             v.setScaleX(scale);
