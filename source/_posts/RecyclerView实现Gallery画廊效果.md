@@ -85,7 +85,7 @@ tags:
                 scale = (float) (rect.left + getWidth() * 0.35 - getWidth() * 0.5 - scrollOffset);
                 scale /= translate();
                 scale = Math.abs(scale);
-//                v.setAlpha(1 - scale * 0.5f);
+                v.setAlpha(1 - scale * 0.5f);
                 scale *= 1 / 20f;
                 scale = 1 - scale;
                 v.setScaleX(scale);
@@ -95,10 +95,11 @@ tags:
         }
     }
 
-    private float translate() {
+	private float translate() {
         return (float) (getWidth() * 0.7);
     }
-}
+    }
+
 # 总结 #
 自定义LayoutManager的步骤：
 1. 自定义itemView的位置
