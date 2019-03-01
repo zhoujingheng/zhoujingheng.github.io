@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="实现功能 实现方式总结">
+<meta name="description" content="实现功能 实现方式自定义LayoutManagerpublic class GalleryLayoutManager extends RecyclerView.LayoutManager { private int totalWidth; private int scrollOffset; private SparseArray&amp;lt;Rect&amp;gt; allRect;  public Galle">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RecyclerView实现Gallery画廊效果">
 <meta property="og:url" content="http://yoursite.com/2019/03/01/RecyclerView实现Gallery画廊效果/index.html">
 <meta property="og:site_name" content="Flynn&#39;s Notes">
-<meta property="og:description" content="实现功能 实现方式总结">
+<meta property="og:description" content="实现功能 实现方式自定义LayoutManagerpublic class GalleryLayoutManager extends RecyclerView.LayoutManager { private int totalWidth; private int scrollOffset; private SparseArray&amp;lt;Rect&amp;gt; allRect;  public Galle">
 <meta property="og:image" content="https://i.imgur.com/TKFFwvQ.png">
-<meta property="og:updated_time" content="2019-03-01T03:03:40.657Z">
+<meta property="og:updated_time" content="2019-03-01T07:19:59.187Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RecyclerView实现Gallery画廊效果">
-<meta name="twitter:description" content="实现功能 实现方式总结">
+<meta name="twitter:description" content="实现功能 实现方式自定义LayoutManagerpublic class GalleryLayoutManager extends RecyclerView.LayoutManager { private int totalWidth; private int scrollOffset; private SparseArray&amp;lt;Rect&amp;gt; allRect;  public Galle">
 <meta name="twitter:image" content="https://i.imgur.com/TKFFwvQ.png">
 
 
@@ -186,7 +186,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -196,7 +196,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -260,7 +260,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-01T10:39:09+08:00">
                 2019-03-01
@@ -301,7 +301,94 @@
 
       
         <h1 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h1><p><img src="https://i.imgur.com/TKFFwvQ.png" alt=""></p>
-<h1 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1>
+<h1 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h1><h2 id="自定义LayoutManager"><a href="#自定义LayoutManager" class="headerlink" title="自定义LayoutManager"></a>自定义LayoutManager</h2><pre><code>public class GalleryLayoutManager extends RecyclerView.LayoutManager {
+private int totalWidth;
+private int scrollOffset;
+private SparseArray&lt;Rect&gt; allRect;
+
+public GalleryLayoutManager() {
+    allRect = new SparseArray&lt;&gt;();
+}
+
+@Override
+public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+    return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+}
+
+@Override
+public boolean canScrollHorizontally() {
+    return true;
+}
+
+@Override
+public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+    calculateChildrenSize(recycler);
+    recyclerAndFillView(recycler, state);
+}
+
+private void calculateChildrenSize(RecyclerView.Recycler recycler) {
+    totalWidth = (int) (getWidth() * 0.06);
+    for (int i = 0; i &lt; getItemCount(); i++) {
+        View v = recycler.getViewForPosition(i);
+        addView(v);
+        measureChildWithMargins(v, (int) (getWidth() * 0.2), (int) (getHeight() * 0.1));
+        calculateItemDecorationsForChild(v, new Rect());
+        int width = getDecoratedMeasuredWidth(v);
+        int height = getDecoratedMeasuredHeight(v);
+        Rect childRect = allRect.get(i);
+        if (null == childRect) {
+            childRect = new Rect();
+        }
+        childRect.set(totalWidth, (getHeight() - height) / 2, totalWidth + width, (getHeight() + height) / 2);
+        totalWidth += width;
+        allRect.put(i, childRect);
+    }
+    totalWidth += getWidth() * 0.1;
+}
+
+@Override
+public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+    if (scrollOffset + dx &lt; 0) {
+        dx = -scrollOffset;
+    } else if (scrollOffset + dx &gt; totalWidth - getWidth()) {
+        dx = totalWidth - getWidth() - scrollOffset;
+    }
+    offsetChildrenHorizontal(-dx);
+    recyclerAndFillView(recycler, state);
+    scrollOffset += dx;
+    return dx;
+}
+
+private void recyclerAndFillView(RecyclerView.Recycler recycler, RecyclerView.State state) {
+    if (getItemCount() == 0 || state.isPreLayout()) return;
+    int w = getWidth();
+    int h = getHeight();
+    detachAndScrapAttachedViews(recycler);
+    Rect displayRect = new Rect(scrollOffset, 0, scrollOffset + w, h);
+
+    float scale;
+    for (int i = 0; i &lt; getItemCount(); i++) {
+        if (Rect.intersects(displayRect, allRect.get(i))) {
+            View v = recycler.getViewForPosition(i);
+            measureChildWithMargins(v, (int) (getWidth() * 0.3), (int) (getHeight() * 0.1));
+            addView(v);
+
+            Rect rect = allRect.get(i);
+            scale = (float) (rect.left + getWidth() * 0.35 - getWidth() * 0.5 - scrollOffset);
+            scale /= translate();
+            scale = Math.abs(scale);
+</code></pre><p>//                v.setAlpha(1 - scale <em> 0.5f);<br>                scale </em>= 1 / 20f;<br>                scale = 1 - scale;<br>                v.setScaleX(scale);<br>                v.setScaleY(scale);<br>                layoutDecorated(v, rect.left - scrollOffset, rect.top, rect.right - scrollOffset, rect.bottom);<br>            }<br>        }<br>    }</p>
+<pre><code>private float translate() {
+    return (float) (getWidth() * 0.7);
+}
+</code></pre><p>}</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>自定义LayoutManager的步骤：</p>
+<ol>
+<li>自定义itemView的位置</li>
+<li>滑动实现</li>
+<li>itemView复用实现</li>
+</ol>
+
       
     </div>
     
@@ -392,10 +479,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -416,7 +503,7 @@
                 <a href="/archives/">
               
                   <span class="site-state-item-count">3</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>
             
@@ -452,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实现功能"><span class="nav-number">1.</span> <span class="nav-text">实现功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现方式"><span class="nav-number">2.</span> <span class="nav-text">实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实现功能"><span class="nav-number">1.</span> <span class="nav-text">实现功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现方式"><span class="nav-number">2.</span> <span class="nav-text">实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义LayoutManager"><span class="nav-number">2.1.</span> <span class="nav-text">自定义LayoutManager</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -482,7 +569,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
